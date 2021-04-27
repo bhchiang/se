@@ -52,7 +52,11 @@ def filter(A,
            nt=100,
            key=jax.random.PRNGKey(0),
            P=0.95,
-           name="default"):
+           name=None,
+           show=False):
+
+    if not show and name is None:
+        raise ValueError("Either show is True or name is not None.")
 
     # Add small amount of perturbation to make Q postive-definite
     Q = jnp.array([
@@ -131,8 +135,10 @@ def filter(A,
     plt.ylabel('y')
     plt.legend()
     plt.title("Simulation")
-    plt.savefig(f"images/{name}_simulate.png", bbox_inches='tight')
-    # plt.show()
+    if show:
+        plt.show()
+    else:
+        plt.savefig(f"images/{name}_simulate.png", bbox_inches='tight')
 
     # Plot estimates with position ellipses
     mus = jnp.array(mus)
@@ -156,9 +162,12 @@ def filter(A,
     plt.ylabel('y')
     plt.legend()
     plt.title("Kalman Filtering with Position Error Ellipses")
-    plt.savefig(f"images/{name}_filter_position_ellipse.png",
-                bbox_inches='tight')
-    # plt.show()
+
+    if show:
+        plt.show()
+    else:
+        plt.savefig(f"images/{name}_filter_position_ellipse.png",
+                    bbox_inches='tight')
 
     plt.figure(figsize=(9, 15))
     plt.plot(xs[:, 0], xs[:, 1], label='state trajectory')
@@ -184,9 +193,12 @@ def filter(A,
     plt.ylabel('y')
     plt.legend()
     plt.title("Kalman Filtering with Velocity Error Ellipses")
-    # plt.show()
-    plt.savefig(f"images/{name}_filter_velocity_ellipse.png",
-                bbox_inches='tight')
+
+    if show:
+        plt.show()
+    else:
+        plt.savefig(f"images/{name}_filter_velocity_ellipse.png",
+                    bbox_inches='tight')
 
     print(f"Finished filtering {name}")
 
@@ -233,4 +245,5 @@ if __name__ == "__main__":
            v_sigma0,
            key=jax.random.PRNGKey(0),
            nt=100,
-           name=f"v1")
+           name=f"v1",
+           show=True)
